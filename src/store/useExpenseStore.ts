@@ -17,11 +17,17 @@ export interface Group {
 interface ExpenseStore {
   expenses: Expense[];
   groups: Group[];
+  backgroundType: 'video' | 'color';
+  currentVideo: string;
+  backgroundColor: string;
   addExpense: (expense: Omit<Expense, "id">) => void;
   editExpense: (id: string, expense: Omit<Expense, "id">) => void;
   deleteExpense: (id: string) => void;
   addGroup: (group: Omit<Group, "id">) => void;
   deleteGroup: (id: string) => void;
+  setBackgroundType: (type: 'video' | 'color') => void;
+  setCurrentVideo: (video: string) => void;
+  setBackgroundColor: (color: string) => void;
 }
 
 export const useExpenseStore = create<ExpenseStore>()(
@@ -29,6 +35,9 @@ export const useExpenseStore = create<ExpenseStore>()(
     (set) => ({
       expenses: [],
       groups: [],
+      backgroundType: 'color',
+      currentVideo: '/background.mp4',
+      backgroundColor: '#f8fafc',
       addExpense: (expense) =>
         set((state) => ({
           expenses: [
@@ -53,6 +62,9 @@ export const useExpenseStore = create<ExpenseStore>()(
           groups: state.groups.filter((g) => g.id !== id),
           expenses: state.expenses.filter((e) => e.groupId !== id),
         })),
+      setBackgroundType: (type) => set({ backgroundType: type }),
+      setCurrentVideo: (video) => set({ currentVideo: video }),
+      setBackgroundColor: (color) => set({ backgroundColor: color }),
     }),
     {
       name: "expense-storage",

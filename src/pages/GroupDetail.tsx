@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import ExpenseItem from "@/components/ExpenseItem";
 import AddExpenseModal from "@/components/AddExpenseModal";
 import ConfirmationModal from "@/components/ConfirmationModal";
+import Background from "@/components/Background";
 import { useExpenseStore, Expense } from "@/store/useExpenseStore";
 
 export default function GroupDetail() {
@@ -25,14 +26,17 @@ export default function GroupDetail() {
 
   if (!group) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center">
-        <p className="text-lg text-slate-600 mb-4">Group not found</p>
-        <button
-          onClick={() => navigate("/")}
-          className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
-        >
-          Go Home
-        </button>
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <Background />
+        <div className="bg-white/90 backdrop-blur-sm p-6 rounded-lg">
+          <p className="text-lg text-slate-600 mb-4">Group not found</p>
+          <button
+            onClick={() => navigate("/")}
+            className="bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+          >
+            Go Home
+          </button>
+        </div>
       </div>
     );
   }
@@ -71,8 +75,9 @@ export default function GroupDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white py-4 px-4 border-b border-slate-200">
+    <div className="min-h-screen">
+      <Background />
+      <header className="bg-white/90 backdrop-blur-sm py-4 px-4 border-b border-slate-200">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <button
             onClick={() => navigate("/")}
@@ -96,7 +101,7 @@ export default function GroupDetail() {
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="space-y-4">
           {groupExpenses.length === 0 ? (
-            <div className="text-center py-16 text-slate-500">
+            <div className="text-center py-16 text-slate-500 bg-white/90 backdrop-blur-sm rounded-lg">
               <p className="text-lg mb-4">No expenses yet in this group!</p>
             </div>
           ) : (

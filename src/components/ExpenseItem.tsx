@@ -19,7 +19,7 @@ interface ExpenseItemProps {
 
 export default function ExpenseItem({ expense, onDelete, onEdit }: ExpenseItemProps) {
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-200 flex justify-between items-center">
+    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-slate-200 flex justify-between items-center">
       <div className="flex-1">
         <p className="text-slate-800 font-medium">{expense.details}</p>
         <p className="text-slate-500 text-sm">{formatDate(expense.date)}</p>

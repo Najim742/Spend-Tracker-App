@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash2 } from "lucide-react";
+import { Trash2, Settings } from "lucide-react";
 import AddGroupModal from "../components/AddGroupModal";
 import ConfirmationModal from "../components/ConfirmationModal";
+import SettingsModal from "../components/SettingsModal";
+import Background from "../components/Background";
 import { useExpenseStore, Group } from "../store/useExpenseStore";
 
 function GroupCard({
@@ -23,7 +25,7 @@ function GroupCard({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+    <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-sm border border-slate-200 overflow-hidden">
       <button
         onClick={() => navigate(`/group/${group.id}`)}
         className="w-full p-4 flex justify-between items-center text-left"
@@ -47,6 +49,7 @@ function GroupCard({
 
 export default function Home() {
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [confirmationModal, setConfirmationModal] = useState<{
     isOpen: boolean;
     title: string;
@@ -68,11 +71,20 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white py-8 px-4 border-b border-slate-200">
+    <div className="min-h-screen">
+      <Background />
+      <header className="bg-white/90 backdrop-blur-sm py-8 px-4 border-b border-slate-200">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2 text-slate-800">Spend Tracker</h1>
-          <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
+          <div className="flex justify-between items-center mb-2">
+            <h1 className="text-3xl font-bold text-slate-800">Spend Tracker</h1>
+            <button
+              onClick={() => setIsSettingsModalOpen(true)}
+              className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+            >
+              <Settings size={24} className="text-slate-700" />
+            </button>
+          </div>
+          <div className="bg-teal-50/90 backdrop-blur-sm rounded-lg p-4 border border-teal-200">
             <p className="text-sm text-slate-600">Total Spent</p>
             <p className="text-4xl font-bold text-teal-600">৳{total.toFixed(2)}</p>
           </div>
@@ -81,7 +93,7 @@ export default function Home() {
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="space-y-4">
           {groups.length === 0 ? (
-            <div className="text-center py-16 text-slate-500">
+            <div className="text-center py-16 text-slate-500 bg-white/90 backdrop-blur-sm rounded-lg">
               <p className="text-lg mb-4">No groups yet. Add your first group!</p>
               <button
                 onClick={() => setIsGroupModalOpen(true)}
@@ -113,6 +125,10 @@ export default function Home() {
         isOpen={isGroupModalOpen}
         onClose={() => setIsGroupModalOpen(false)}
         onAdd={addGroup}
+      />
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
       />
       <ConfirmationModal
         isOpen={confirmationModal.isOpen}
