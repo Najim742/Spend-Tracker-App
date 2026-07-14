@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { X, Upload } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Upload, Save } from "lucide-react";
 import { useExpenseStore } from "@/store/useExpenseStore";
 
 interface SettingsModalProps {
@@ -9,14 +9,28 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const {
-    backgroundType,
-    currentVideo,
-    backgroundColor,
-    setBackgroundType,
+    currentVideo: savedCurrentVideo,
+    containerOpacity: savedContainerOpacity,
+    backgroundOverlayOpacity: savedBackgroundOverlayOpacity,
     setCurrentVideo,
-    setBackgroundColor,
+    setContainerOpacity,
+    setBackgroundOverlayOpacity,
+    containerOpacity,
   } = useExpenseStore();
-  const [tempColor, setTempColor] = useState(backgroundColor);
+
+  // Temporary state for editing before saving
+  const [tempCurrentVideo, setTempCurrentVideo] = useState(savedCurrentVideo);
+  const [tempContainerOpacity, setTempContainerOpacity] = useState(savedContainerOpacity);
+  const [tempBackgroundOverlayOpacity, setTempBackgroundOverlayOpacity] = useState(savedBackgroundOverlayOpacity);
+
+  // Reset temp state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setTempCurrentVideo(savedCurrentVideo);
+      setTempContainerOpacity(savedContainerOpacity);
+      setTempBackgroundOverlayOpacity(savedBackgroundOverlayOpacity);
+    }
+  }, [isOpen, savedCurrentVideo, savedContainerOpacity, savedBackgroundOverlayOpacity]);
 
   if (!isOpen) return null;
 
@@ -24,90 +38,43 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
-      setCurrentVideo(url);
+      setTempCurrentVideo(url);
     }
   };
 
+  const handleSave = () => {
+    setCurrentVideo(tempCurrentVideo);
+    setContainerOpacity(tempContainerOpacity);
+    setBackgroundOverlayOpacity(tempBackgroundOverlayOpacity);
+    onClose();
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div 
+        style={{ backgroundColor: containerOpacity > 0 ? `rgba(15,23,42,${containerOpacity})` : 'transparent' }}
+        className="backdrop-blur-xl rounded-2xl p-6 max-w-md w-full mx-4 border border-white/20 shadow-2xl"
+      >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-slate-800">Settings</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-700">
+          <h2 className="text-xl font-bold text-slate-100 drop-shadow-md">Settings</h2>
+          <button onClick={onClose} className="text-slate-300 hover:text-slate-100">
             <X size={24} />
           </button>
         </div>
 
         <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Background Type
-            </label>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setBackgroundType('color')}
-                className={`flex-1 py-2 px-4 rounded-lg border-2 transition-colors ${
-                  backgroundType === 'color'
-                    ? 'border-teal-500 bg-teal-50 text-teal-700'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                Solid Color
-              </button>
-              <button
-                onClick={() => setBackgroundType('video')}
-                className={`flex-1 py-2 px-4 rounded-lg border-2 transition-colors ${
-                  backgroundType === 'video'
-                    ? 'border-teal-500 bg-teal-50 text-teal-700'
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                Video
-              </button>
-            </div>
-          </div>
-
-          {backgroundType === 'color' && (
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Background Color
+          {/* Background Settings Group */}
+          <div className="border border-white/20 rounded-xl p-4">
+            <h3 className="text-lg font-semibold text-slate-100 mb-4">Background Settings</h3>
+            
+            {/* Video Upload */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-slate-200 mb-2">
+                Upload Background Video
               </label>
-              <div className="flex items-center gap-4">
-                <input
-                  type="color"
-                  value={tempColor}
-                  onChange={(e) => {
-                    setTempColor(e.target.value);
-                    setBackgroundColor(e.target.value);
-                  }}
-                  className="w-12 h-12 rounded cursor-pointer"
-                />
-                <span className="text-slate-600 font-mono">{tempColor}</span>
-              </div>
-              <div className="grid grid-cols-5 gap-2 mt-4">
-                {['#f8fafc', '#dbeafe', '#fce7f3', '#fef3c7', '#dcfce7'].map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => {
-                      setTempColor(color);
-                      setBackgroundColor(color);
-                    }}
-                    className="w-full aspect-square rounded-lg border-2 border-slate-200 hover:border-teal-500 transition-colors"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {backgroundType === 'video' && (
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Upload Video
-              </label>
-              <label className="flex items-center justify-center gap-2 py-4 px-6 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-teal-500 hover:bg-teal-50 transition-colors">
-                <Upload size={20} className="text-slate-500" />
-                <span className="text-slate-600">Choose file</span>
+              <label className="flex items-center justify-center gap-2 py-4 px-6 border-2 border-dashed border-white/30 rounded-xl cursor-pointer hover:border-teal-400 hover:bg-teal-500/20 transition-colors">
+                <Upload size={20} className="text-slate-300" />
+                <span className="text-slate-200">Choose file</span>
                 <input
                   type="file"
                   accept="video/*"
@@ -116,7 +83,48 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 />
               </label>
             </div>
-          )}
+
+            {/* Container Opacity */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-slate-200 mb-2">
+                Container Opacity: {(tempContainerOpacity * 1000).toFixed(0)}%
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="0.1"
+                step="0.005"
+                value={tempContainerOpacity}
+                onChange={(e) => setTempContainerOpacity(parseFloat(e.target.value))}
+                className="w-full"
+              />
+            </div>
+
+            {/* Background Overlay Opacity */}
+            <div>
+              <label className="block text-sm font-medium text-slate-200 mb-2">
+                Background Overlay Opacity: {(tempBackgroundOverlayOpacity * 100).toFixed(0)}%
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="0.8"
+                step="0.05"
+                value={tempBackgroundOverlayOpacity}
+                onChange={(e) => setTempBackgroundOverlayOpacity(parseFloat(e.target.value))}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          {/* Save Button */}
+          <button
+            onClick={handleSave}
+            className="w-full bg-teal-500/70 hover:bg-teal-500/90 text-white font-medium py-2 px-4 rounded-xl transition-all backdrop-blur-md border border-teal-300/30 flex items-center justify-center gap-2"
+          >
+            <Save size={20} />
+            Save Settings
+          </button>
         </div>
       </div>
     </div>

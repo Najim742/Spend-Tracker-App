@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { Expense } from "../store/useExpenseStore";
+import { Expense, useExpenseStore } from "../store/useExpenseStore";
 
 function getTodayLocalDateString() {
   const today = new Date();
@@ -23,6 +23,7 @@ export default function AddExpenseModal({ isOpen, onClose, onAdd, onEdit, groupI
   const [details, setDetails] = useState("");
   const [cost, setCost] = useState("");
   const [date, setDate] = useState(getTodayLocalDateString());
+  const { containerOpacity } = useExpenseStore();
 
   useEffect(() => {
     if (editingExpense) {
@@ -53,48 +54,51 @@ export default function AddExpenseModal({ isOpen, onClose, onAdd, onEdit, groupI
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div 
+        style={{ backgroundColor: containerOpacity > 0 ? `rgba(15,23,42,${containerOpacity})` : 'transparent' }}
+        className="backdrop-blur-xl rounded-2xl p-6 w-full max-w-md shadow-2xl border border-white/20"
+      >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-slate-800">{editingExpense ? "Edit Expense" : "Add Expense"}</h2>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-700">
+          <h2 className="text-xl font-semibold text-slate-100 drop-shadow-md">{editingExpense ? "Edit Expense" : "Add Expense"}</h2>
+          <button onClick={onClose} className="text-slate-300 hover:text-slate-100">
             <X size={24} />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Details</label>
+            <label className="block text-sm font-medium text-slate-200 mb-1">Details</label>
             <input
               type="text"
               value={details}
               onChange={(e) => setDetails(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 bg-white/20 text-slate-100 placeholder-slate-300"
               placeholder="e.g., Coffee, Groceries"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Cost (৳)</label>
+            <label className="block text-sm font-medium text-slate-200 mb-1">Cost (৳)</label>
             <input
               type="number"
               step="0.01"
               value={cost}
               onChange={(e) => setCost(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 bg-white/20 text-slate-100 placeholder-slate-300"
               placeholder="0.00"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Date</label>
+            <label className="block text-sm font-medium text-slate-200 mb-1">Date</label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-400 bg-white/20 text-slate-100"
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
+            className="w-full bg-teal-500/70 hover:bg-teal-500/90 text-white font-medium py-2 px-4 rounded-xl transition-all backdrop-blur-md border border-teal-300/30"
           >
             {editingExpense ? "Update Expense" : "Add Expense"}
           </button>

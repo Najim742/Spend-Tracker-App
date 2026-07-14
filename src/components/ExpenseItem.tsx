@@ -1,5 +1,5 @@
 import { Trash2, Edit3 } from "lucide-react";
-import { Expense } from "../store/useExpenseStore";
+import { Expense, useExpenseStore } from "../store/useExpenseStore";
 
 function formatDate(dateString: string) {
   const [year, month, day] = dateString.split("-").map(Number);
@@ -18,23 +18,27 @@ interface ExpenseItemProps {
 }
 
 export default function ExpenseItem({ expense, onDelete, onEdit }: ExpenseItemProps) {
+  const { containerOpacity } = useExpenseStore();
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-sm border border-slate-200 flex justify-between items-center">
+    <div 
+      style={{ backgroundColor: containerOpacity > 0 ? `rgba(15,23,42,${containerOpacity})` : 'transparent' }}
+      className="backdrop-blur-xl rounded-2xl p-4 shadow-lg border border-white/20 flex justify-between items-center"
+    >
       <div className="flex-1">
-        <p className="text-slate-800 font-medium">{expense.details}</p>
-        <p className="text-slate-500 text-sm">{formatDate(expense.date)}</p>
+        <p className="text-slate-100 font-medium drop-shadow-md">{expense.details}</p>
+        <p className="text-slate-200 text-sm drop-shadow-md">{formatDate(expense.date)}</p>
       </div>
       <div className="flex items-center gap-4">
-        <p className="text-xl font-semibold text-teal-600">৳{expense.cost.toFixed(2)}</p>
+        <p className="text-xl font-semibold text-teal-300 drop-shadow-md">৳{expense.cost.toFixed(2)}</p>
         <button
           onClick={() => onEdit(expense)}
-          className="text-slate-500 hover:text-slate-700 transition-colors"
+          className="text-slate-300 hover:text-slate-100 transition-colors"
         >
           <Edit3 size={20} />
         </button>
         <button
           onClick={() => onDelete(expense.id)}
-          className="text-red-500 hover:text-red-700 transition-colors"
+          className="text-red-300 hover:text-red-100 transition-colors"
         >
           <Trash2 size={20} />
         </button>
