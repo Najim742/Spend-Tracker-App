@@ -72,22 +72,22 @@ export default function GroupDetail() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-teal-500 text-white py-4 px-4">
+      <header className="bg-white py-4 px-4 border-b border-slate-200">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 hover:bg-white/20 p-2 rounded-lg transition-colors"
+            className="flex items-center gap-2 hover:bg-slate-100 p-2 rounded-lg transition-colors text-slate-700"
           >
             <ArrowLeft size={24} />
             <span className="font-medium">Back</span>
           </button>
           <div className="text-center flex-1">
-            <h1 className="text-2xl font-bold">{group.name}</h1>
-            <p className="text-white/80">Total: ৳{groupTotal.toFixed(2)}</p>
+            <h1 className="text-2xl font-bold text-slate-800">{group.name}</h1>
+            <p className="text-teal-600 font-medium">Total: ৳{groupTotal.toFixed(2)}</p>
           </div>
           <button
             onClick={handleDeleteGroup}
-            className="text-red-200 hover:text-red-100 hover:bg-red-500/20 p-2 rounded-lg transition-colors"
+            className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors"
           >
             <Trash2 size={24} />
           </button>

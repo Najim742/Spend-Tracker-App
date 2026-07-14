@@ -69,12 +69,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-teal-500 text-white py-8 px-4">
+      <header className="bg-white py-8 px-4 border-b border-slate-200">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">Spend Tracker</h1>
-          <div className="bg-white bg-opacity-20 rounded-lg p-4">
-            <p className="text-sm opacity-80">Total Spent</p>
-            <p className="text-4xl font-bold">৳{total.toFixed(2)}</p>
+          <h1 className="text-3xl font-bold mb-2 text-slate-800">Spend Tracker</h1>
+          <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
+            <p className="text-sm text-slate-600">Total Spent</p>
+            <p className="text-4xl font-bold text-teal-600">৳{total.toFixed(2)}</p>
           </div>
         </div>
       </header>
