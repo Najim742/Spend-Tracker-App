@@ -29,3 +29,6 @@ android/.gradle
 android/build
 android/app/build
 android/local.properties
+
+# AI assistant files
+.trae
