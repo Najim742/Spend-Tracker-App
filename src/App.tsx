@@ -4,6 +4,7 @@ import Home from "@/pages/Home";
 import GroupDetail from "@/pages/GroupDetail";
 import Login from "@/pages/Login";
 import PasswordSetup from "@/pages/PasswordSetup";
+import Background from "@/components/Background";
 import { PASSWORD_KEY } from "@/utils/auth";
 
 export default function App() {
@@ -35,35 +36,41 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <p className="text-slate-600">Loading...</p>
+      <div className="min-h-screen">
+        <Background />
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-slate-100 drop-shadow-md">Loading...</p>
+        </div>
       </div>
     );
   }
   return (
-    <Router>
-      <Routes>
-        {!hasPassword ? (
-          <>
-            <Route
-              path="/setup-password"
-              element={<PasswordSetup onPasswordSet={handlePasswordSet} />}
-            />
-            <Route path="*" element={<Navigate to="/setup-password" replace />} />
-          </>
-        ) : !isAuthenticated ? (
-          <>
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </>
-        ) : (
-          <>
-            <Route path="/" element={<Home />} />
-            <Route path="/group/:groupId" element={<GroupDetail />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </>
-        )}
-      </Routes>
-    </Router>
+    <div className="min-h-screen">
+      <Background />
+      <Router>
+        <Routes>
+          {!hasPassword ? (
+            <>
+              <Route
+                path="/setup-password"
+                element={<PasswordSetup onPasswordSet={handlePasswordSet} />}
+              />
+              <Route path="*" element={<Navigate to="/setup-password" replace />} />
+            </>
+          ) : !isAuthenticated ? (
+            <>
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="*" element={<Navigate to="/login" replace />} />
+            </>
+          ) : (
+            <>
+              <Route path="/" element={<Home />} />
+              <Route path="/group/:groupId" element={<GroupDetail />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </>
+          )}
+        </Routes>
+      </Router>
+    </div>
   );
 }
